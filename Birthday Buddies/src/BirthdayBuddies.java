@@ -4,6 +4,9 @@ import java.util.Map;
 
 /**
  * Created by Yining on 7/20/16.
+ * 
+ * Takes in a LinkedList of names (strings) and matches them another person. Two people will not receive each other.
+ *
  */
 public class BirthdayBuddies {
     LinkedList<String> names;
@@ -20,19 +23,20 @@ public class BirthdayBuddies {
             int random = (int) (Math.random() * (names1.size()-i));
             names1.addLast(names1.remove(random));
         }
-//
-//        System.out.println(names.size());
-//        for (String s : names) {
-//            System.out.println(s);
-//        }
-//        System.out.println(names1.size());
-//        for (String s : names1) {
-//            System.out.println(s);
-//        }
+
 
         while (names.size() != 0 && names1.size() != 0) {
             if (!names.peekFirst().equals(names1.peekFirst())) {
-                pairs.put(names.removeFirst(), names1.removeFirst());
+                if (pairs.containsKey(names1.peekFirst())) {
+                    if (!pairs.get(names1.peekFirst()).equals(names.peekFirst())){
+                        pairs.put(names.removeFirst(), names1.removeFirst());
+                    } else {
+                        names1.addLast(names1.removeFirst());
+                    }
+                } else {
+                    pairs.put(names.removeFirst(), names1.removeFirst());
+                }
+
             } else {
                 names1.addLast(names1.removeFirst());
             }
