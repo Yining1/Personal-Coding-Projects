@@ -44,6 +44,7 @@ public class BirthdayBuddies {
         }
         return pairs;
     }
+    
 
     public static void main(String[] args) {
         LinkedList<String> names = new LinkedList<>();
@@ -63,3 +64,5 @@ public class BirthdayBuddies {
         }
     }
 }
+
+
