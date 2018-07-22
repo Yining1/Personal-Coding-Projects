@@ -14,6 +14,16 @@ public class linkedListTest {
         dLList.insert(2);
         dLList.insert(3);
         dLList.insert(4);
+        assertEquals(dLList.toString(), "1234");
 
+    }
+    @Test
+    public void testInsertLetters() throws Exception {
+        linkedList dLList = new linkedList();
+        dLList.insert("A");
+        dLList.insert("B");
+        dLList.insert("C");
+        dLList.insert("D");
+        assertEquals(dLList.toString(), "ABCD");
     }
 }
