@@ -32,9 +32,34 @@ public class linkedList implements Iterable{
 
     }
 
-//  removes right value left of sentinel
-    public void remove() {
+//    public void insert(Object o, double posX, double posY) {
+//        if (sentinel.next == null || sentinel.prev == null) {
+//            Node insertNode = new Node();
+//            insertNode.setO(o);
+//            insertNode.next = sentinel;
+//            insertNode.prev = sentinel;
+//            sentinel.next = insertNode;
+//            sentinel.prev = insertNode;
+//            length++;
+//        } else {
+//            Node insertNode = new Node();
+//            insertNode.setO(o);
+//            insertNode.next = sentinel;
+//            insertNode.prev = sentinel.prev;
+//            sentinel.prev.next = insertNode;
+//            sentinel.prev = insertNode;
+//            length++;
+//        }
+//
+//    }
 
+//  removes value left of sentinel
+    public void remove() {
+        if (sentinel.next != null || sentinel.prev != null) {
+            sentinel.prev.prev.next = sentinel;
+            sentinel.prev = sentinel.prev.prev;
+            length--;
+        }
     }
 
 //    move the sentinel

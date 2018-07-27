@@ -43,12 +43,10 @@ public class Editor extends Application {
 
     /** An EventHandler to handle keys that get pressed. */
     private class KeyEventHandler implements EventHandler<KeyEvent> {
-        private double cursorX;
-        private double cursorY;
+//
         private double positionX;
         private double positionY;
 
-        private int increment = 0;
         private static final int STARTING_FONT_SIZE = 20;
 
         /** The Text to display on the screen. */
@@ -58,17 +56,15 @@ public class Editor extends Application {
 //        private ArrayList keyEvents = new ArrayList<KeyEvent>();
 
         private String fontName = "Verdana";
+        private Group root;
 
         KeyEventHandler(final Group root, int windowWidth, int windowHeight) {
-            displayText = new Text(positionX, positionY, "");
-            displayText.setTextOrigin(VPos.TOP);
-            displayText.setFont(Font.font(fontName, fontSize));
-            root.getChildren().add(displayText);
+            this.root = root;
+
         }
 
         @Override
         public void handle(KeyEvent keyEvent) {
-
 
             if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
                 // Arrow keys should be processed using the KEY_PRESSED event, because KEY_PRESSED
@@ -77,11 +73,32 @@ public class Editor extends Application {
                 KeyCode code = keyEvent.getCode();
                 if (code == KeyCode.UP || (keyEvent.isShortcutDown() && code == KeyCode.EQUALS || code == KeyCode.PLUS)) {
                     fontSize += 4;
+                    positionX = 0;
+                    positionY = 0;
+                    for (Object i : root.getChildren()) {
+                        if (i instanceof Text) {
+                            ((Text) i).setFont(Font.font(fontSize));
+                            ((Text) i).setX(positionX);
+                            ((Text) i).setY(positionY);
+                            positionX += ((Text) i).getLayoutBounds().getWidth();
+                        }
+                    }
                     displayText.setFont(Font.font(fontName, fontSize));
                     updateCursor();
 
                 } else if (code == KeyCode.DOWN || (keyEvent.isShortcutDown() && code == KeyCode.MINUS)) {
                     fontSize = Math.max(1, fontSize - 4);
+                    positionX = 0;
+                    positionY = 0;
+                    for (Object i : root.getChildren()) {
+                        if (i instanceof Text) {
+                            ((Text) i).setFont(Font.font(fontSize));
+                            ((Text) i).setX(positionX);
+                            ((Text) i).setY(positionY);
+                            positionX += ((Text) i).getLayoutBounds().getWidth();
+                        }
+
+                    }
                     displayText.setFont(Font.font(fontName, fontSize));
                     updateCursor();
 
@@ -96,15 +113,13 @@ public class Editor extends Application {
 
 
                 if (characterTyped.length() > 0 && characterTyped.charAt(0) != 8) {
-                    if (characterTyped == "+" || characterTyped == "-") {
+                    if (characterTyped.equals("+") || characterTyped.equals("-") || characterTyped.equals("=")) {
                         return;
                     }
                     // Ignore control keys, which have zero length, as well as the backspace
                     // key, which is represented as a character of value = 8 on Windows.
-                    Text newInsert = new Text(0, 0, characterTyped);
-                    dLList.insert(characterTyped);
-                    displayText.setText(dLList.toString());
-//                    positionX += newInsert.getLayoutBounds().getWidth();
+                    showCharacter(characterTyped);
+
                     keyEvent.consume();
                 }
                 updateCursor();
@@ -115,21 +130,31 @@ public class Editor extends Application {
 //        @Override
 //        public void handle(AWTEvent)
 
+        private void showCharacter(String characterTyped) {
+            Text newInsert = new Text(positionX, positionY, characterTyped);
+            dLList.insert(newInsert);
+            newInsert.setTextOrigin(VPos.TOP);
+            newInsert.setFont(Font.font(fontName, fontSize));
+            positionX += newInsert.getLayoutBounds().getWidth();
+            root.getChildren().add(newInsert);
+        }
+
         private void updateCursor() {
 
             // Figure out the size of the current text.
-            Text newInsert = new Text(0, 0, characterTyped);
-
-            double textHeight = displayText.getLayoutBounds().getHeight();
-            double textWidth = displayText.getLayoutBounds().getWidth();
+//            Text newInsert = new Text(0, 0, characterTyped);
+//
+//            double textHeight = newInsert.getLayoutBounds().getHeight();
+//            double textWidth = displayText.getLayoutBounds().getWidth();
 
             // Calculate the position so that the text will be centered on the screen.
-            cursorX = textWidth;
-            cursorY = 0;
+//            cursorX = textWidth;
+//            cursorY = 0;
 
+            cursor.setHeight(fontSize);
 
-            cursor.setX(cursorX);
-            cursor.setY(cursorY);
+            cursor.setX(positionX);
+            cursor.setY(positionY);
 
         }
     }
@@ -187,7 +212,7 @@ public class Editor extends Application {
         // Register the event handler to be called for all KEY_PRESSED and KEY_TYPED events.
         scene.setOnKeyTyped(keyEventHandler);
         scene.setOnKeyPressed(keyEventHandler);
-        scene.setOnKeyReleased(keyEventHandler);
+//        scene.setOnKeyReleased(keyEventHandler);
 
         // All new Nodes need to be added to the root in order to be displayed.
         root.getChildren().add(cursor);

@@ -26,4 +26,17 @@ public class linkedListTest {
         dLList.insert("D");
         assertEquals(dLList.toString(), "ABCD");
     }
+
+    @Test
+    public void testRemove() throws Exception {
+        linkedList dLList = new linkedList();
+        dLList.insert("A");
+        dLList.insert("B");
+        dLList.insert("C");
+        dLList.insert("D");
+        dLList.remove();
+        assertEquals(dLList.toString(), "ABC");
+        dLList.remove();
+        assertEquals(dLList.toString(), "AB");
+    }
 }
